@@ -1,0 +1,92 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+  <body>
+
+  	<div th:fragment="contact-details" >
+  	
+  		<h3 th:text="#{contact.details}">Contact Details</h3>
+  		
+  		<div class="form-group" th:classappend="${#fields.hasErrors('contactName')}? has-error">
+    		<label for="contactName" th:text="#{contact.name}">Contact Name</label>
+    		<span class="help-block" th:if="${#fields.hasErrors('contactName')}" th:errors="*{contactName}">Incorrect Contact Name</span>
+    		<input type="text" class="form-control" name="contactName" id="contactName" 
+    			   th:placeholder="#{contact.name}" th:field="*{contactName}" />
+  		</div>
+	  	<div class="form-group" th:classappend="${#fields.hasErrors('email')}? has-error">
+	  		<label for="email" th:text="#{email}">Email</label>
+	  		<span class="help-block" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Incorrect Email</span>
+	  		<input type="email" class="form-control" name="email" id="email" 
+	  			   th:placeholder="#{email}" th:field="*{email}" /> 
+	  	</div>
+	  	<div class="form-group" th:classappend="${#fields.hasErrors('telephone')}? has-error">
+	  		<label for="telephone" th:text="#{telephone}">Telephone</label>
+	  		<span class="help-block" th:if="${#fields.hasErrors('telephone')}" th:errors="*{telephone}">Incorrect Telephone.</span>
+	  		<input type="tel" class="form-control" name="telephone" id="telephone" 
+	  			   th:placeholder="#{telephone}" th:field="*{telephone}" />
+	  	</div>
+  	</div>
+  	
+  	<div th:fragment="company-details" >
+
+  		<h3 th:text="#{company.details}">Company Details</h3>
+  	
+	  	<div class="form-group" th:classappend="${#fields.hasErrors('companyName')}? has-error">
+		    <label for="companyName" th:text="#{company.name}">Company Name</label>
+	  		<span class="help-block" th:if="${#fields.hasErrors('companyName')}" th:errors="*{companyName}">Incorrect Company Name.</span>
+		    <input type="text" class="form-control" name="companyName" id="companyName" 
+		    	   th:placeholder="#{company.name}" th:field="*{companyName}" />
+	  	</div>
+	  	<div class="form-group" th:classappend="${#fields.hasErrors('profession')}? has-error">
+      		<label for="profession" th:text="#{profession}">Profession</label>
+	  		<span class="help-block" th:if="${#fields.hasErrors('profession')}" th:errors="*{profession}">Incorrect Profession.</span>
+      		<select id="profession" name="profession" class="form-control"
+      				th:field="*{profession}">
+      			<option th:each="profession : ${professions}" th:value="${profession.id}" 
+      					th:text="${profession.name}">Plumber</option>
+      		</select>
+    	</div>
+    	<div class="form-group" th:classappend="${#fields.hasErrors('schedule')}? has-error">
+      		<label th:text="#{work.schedule}">Work Schedule</label>
+	  		<span class="help-block" th:if="${#fields.hasErrors('schedule')}" th:errors="*{schedule}">Must fill out your work schedule.</span>
+	  		
+	  		<div th:each="day, dayStat : *{schedule.workingWeek}" class="day-row" >
+	  			<h5 th:text="${calUtils.getNameOfWeekDay(day.day)}">not working</h5>
+	  			<input type="hidden" th:field="*{schedule.workingWeek[__${dayStat.index}__].day}" />
+ 	  			<div th:each="hours, hoursStat : *{schedule.workingWeek[__${dayStat.index}__].hours}">
+	  				<input type="time" th:field="*{schedule.workingWeek[__${dayStat.index}__].hours[__${hoursStat.index}__].open}"/> - <input type="time" th:field="*{schedule.workingWeek[__${dayStat.index}__].hours[__${hoursStat.index}__].close}"/>
+	  			</div> 
+	  		</div>
+    	</div>
+  	</div>
+  	
+  	<div th:fragment="area-details" >
+  		
+  		<h3 th:text="#{area.details}">Area Details</h3>
+  		
+	  	<p class="bg-danger" th:if="${#fields.hasErrors('workingAreas')}" th:errors="*{workingAreas}">Must pick area's you are willing to accept work in.</span>
+  		<div id="map" ></div>  	
+  		
+  		<input type="hidden" name="workingAreas" id="workingAreas"
+  			   th:field="*{workingAreas}" th:errorClass="has-error" />	
+  	</div>
+  	
+  	<div th:fragment="feature-details" >
+  	 	
+  	 	<h3 th:text="#{feature.details}">Feature Details</h3>
+  	 	
+  	 	<div class="form-group">
+    		<label for="logo" th:text="#{upload.logo}">Upload Logo</label>
+    		<input type="file" id="logo" name="logo">
+    		<p class="error" th:if="${#fields.hasErrors('logo')}" th:errors="${logo}">Logo Error</p>
+		</div>
+	 	<div class="form-group">
+    		<label for="featureImage" th:text="#{upload.feature.image}">Upload Feature Image</label>
+    		<input type="file" id="featureImage" name="feature">
+		</div>
+  	</div>
+  	
+  </body>
+
+</html>
