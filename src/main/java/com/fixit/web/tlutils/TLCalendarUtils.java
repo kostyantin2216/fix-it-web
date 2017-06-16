@@ -4,7 +4,6 @@
 package com.fixit.web.tlutils;
 
 import com.fixit.web.config.MessagesProperties;
-import com.fixit.web.config.WebContextProvider;
 
 /**
  * @author 		Kostyantin
@@ -12,10 +11,9 @@ import com.fixit.web.config.WebContextProvider;
  */
 public class TLCalendarUtils {
 	
-	private final static String[] namesOfWeekDays = new String[7];
+	private final String[] namesOfWeekDays = new String[7];
 	
-	{
-		MessagesProperties messagesProperties = WebContextProvider.getMessagesProperties();
+	public TLCalendarUtils(MessagesProperties messagesProperties) {
 		namesOfWeekDays[0] = messagesProperties.getMsg("sunday");
 		namesOfWeekDays[1] = messagesProperties.getMsg("monday");
 		namesOfWeekDays[2] = messagesProperties.getMsg("tuesday");
@@ -23,7 +21,7 @@ public class TLCalendarUtils {
 		namesOfWeekDays[4] = messagesProperties.getMsg("thursday");
 		namesOfWeekDays[5] = messagesProperties.getMsg("friday");
 		namesOfWeekDays[6] = messagesProperties.getMsg("saturday");
- 	}
+	}
 	
 	public String getNameOfWeekDay(int day) {
 		int index = day - 1;

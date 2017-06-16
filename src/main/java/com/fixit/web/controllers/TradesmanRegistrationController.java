@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.DefaultMessageCodesResolver;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -54,6 +53,7 @@ public class TradesmanRegistrationController {
 	
 	private final FileManager fileManager;
 	private final MessagesProperties msgs;
+	private final ThymeleafUtilities thymeleafUtils;
 	
 	private final TradesmanRegistrant tradesmanRegistrant;
 	private final ProfessionDao professionDao;
@@ -62,9 +62,10 @@ public class TradesmanRegistrationController {
 	private final String restClientToken;
 	
 	@Autowired
-	public TradesmanRegistrationController(FileManager fileManager, MessagesProperties messageSource, TradesmanRegistrant tradesmanRegistrant, RestClientDao restClientDao, ProfessionDao professionDao, StoredPropertyDao storedPropertyDao) {
+	public TradesmanRegistrationController(FileManager fileManager, MessagesProperties messageSource, ThymeleafUtilities thymeleafUtilities, TradesmanRegistrant tradesmanRegistrant, RestClientDao restClientDao, ProfessionDao professionDao, StoredPropertyDao storedPropertyDao) {
 		this.fileManager = fileManager;
 		this.msgs = messageSource;
+		this.thymeleafUtils = thymeleafUtilities;
 		
 		this.tradesmanRegistrant = tradesmanRegistrant;
 		this.professionDao = professionDao;
@@ -98,8 +99,7 @@ public class TradesmanRegistrationController {
 	}
 
 	@PostMapping
-	public ModelAndView registerTradesman(
-										  @Valid @ModelAttribute("form") TradesmanRegistrationForm form,
+	public ModelAndView registerTradesman(@Valid @ModelAttribute("form") TradesmanRegistrationForm form,
 			  							  BindingResult bindingResult,
 										  ModelAndView mv) {
 		FILog.i(form.toString());
@@ -131,7 +131,7 @@ public class TradesmanRegistrationController {
 		mv.addObject(Constants.ARG_AUTHORIZATION_TOKEN, restClientToken);
 		mv.addObject(Constants.ARG_INITIAL_MAP_AREA_TYPE, MapAreaType.Province.name());
 		mv.addObject(Constants.ARG_PROFESSIONS, professionDao.getActiveProfessions());
-		mv.addObject("calUtils", ThymeleafUtilities.getCalendarUtils());
+		mv.addObject("calUtils", thymeleafUtils.getCalendarUtils());
 	}
 	
 	public String editTradesmanFeatures(@RequestParam("logo") MultipartFile logo,
