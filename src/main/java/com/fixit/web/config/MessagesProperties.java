@@ -23,6 +23,9 @@ public class MessagesProperties {
 	public final static String LEAD_ID_INVALID = "lead.id.invalid";
 	
 	public final static String LOGO_EMPTY = "validation.logo.empty";
+	public final static String FEATURE_IMAGE_EMPTY = "validation.feature.image.empty";
+	
+	public final static String TRADESMAN_REGISTRATION_SUCCESS = "tradesman.registration.success";
 	
 	private final MessageSource msgs;
 	

@@ -1,0 +1,48 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+  <body>
+
+	<div th:fragment="header (title)">
+		<div class="header_section hd_cover">
+			<div class="container">
+				<!-- Logo & Contact Info -->
+				<div class="row ">
+					<div class="col-md-6 col-sm-12 wl_rtl">
+						<div class="logo">
+							<a href="http://fixxit.co.za/" title="Fixxit" rel="home"> <img
+								src="http://fixxit.co.za/wp-content/uploads/2017/07/cropped-cropped-yellow-logo-white-border-1-1-150x150.png"
+								height="160" width="160">
+							</a>
+							<h1 th:text="${title}">Fixxit find tradesmen with ease</h1>
+						</div>
+					</div>
+					<div class="col-md-6 col-sm-12">
+						<ul class="head-contact-info">
+							<li><i class="icon-mail-alt"></i><a
+								href="mailto:admin@fixxit.co.za">admin@fixxit.co.za</a></li>
+							<li><i class="icon-phone"></i><a href="tel:0159753586">0159753586</a></li>
+						</ul>
+						<ul class="social">
+							<li class="facebook" data-toggle="tooltip"
+								data-placement="bottom" title="Facebook"><a
+								href="https://www.facebook.com/FIxxIt-712967842208700/"><i
+									class="icon-facebook"></i></a></li>
+							<li class="linkedin" data-toggle="tooltip"
+								data-placement="bottom" title="whatsapp"><a href="tel:#"><i
+									class="icon-whatsapp"></i></a></li>
+
+						</ul>
+					</div>
+				</div>
+				<!-- /Logo & Contact Info -->
+			</div>
+
+		</div>
+
+	</div>
+
+</body>
+
+</html>

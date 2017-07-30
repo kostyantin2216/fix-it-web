@@ -7,30 +7,20 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     
     <link rel="stylesheet" th:href="@{resources/css/bootstrap.css}" />
+    <link rel="stylesheet" th:href="@{resources/css/fileinput.css}" />
     <link rel="stylesheet" th:href="@{resources/css/intlTelInput.css}" />
+    <link rel="stylesheet" th:href="@{resources/css/fixxitStyle.css}" />
     
     <style type="text/css">
-    	h5 {
-    		font-weight: bold;
-    	}
-    
-    	.panel-default {
-			margin: 30px 20px;
-		}
-
-		#submit {
-			margin-bottom: 20px;
-		}
-
-		#map {
-		   width: 100%;
-		   height: 400px;
-		   background-color: grey;
+    	.map {
+			width: 100%;
+			height: 400px;
+			background-color: grey;
 		}
 		
-		#map-control {
+		.map-control {
 			display: inline;
-			box-shadow: 0px 4px 4px 0px rgba(0,0,0,0.50);
+			box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.50);
 			border-width: 0px 0.5px 0.5px 0.5px;
 			border-style: solid;
 			border-color: #dbdbdb;
@@ -48,60 +38,73 @@
 		}
 		
 		.map-control-interior {
-			color: rgb(25,25,25);
-			font-family: Roboto,Arial,sans-serif;
+			color: rgb(25, 25, 25);
+			font-family: Roboto, Arial, sans-serif;
 			font-size: 14px;
 			line-height: 38px;
 			padding-left: 5px;
 			padding-right: 5px;
 		}
-		
-		.form-group .intl-tel-input {
-			display: block;
-		}
-	</style>
+    </style>
+    
   </head>
 
   <body>
+  
+  	<div id="header" th:insert="fragments/header :: header (title=#{tradesman.registration})" />
 
-	<div class="container panel panel-default" >
-	
-		<h1 th:text="#{tradesman.registration}">Tradesman Registration</h1>
+	<div class="panel panel-default">
 		
 	  	<div th:unless="${#strings.isEmpty(error)}">
 	  		<p th:text="${error}">Cannot register at this time, please try again later.</p>
 	  	</div>
+	  	
+	  	<div th:unless="${#strings.isEmpty(successMessage)}">
+	  		<p th:text="${successMessage}"> Successfully registered</p>
+	  	</div>
 	  
-	  	<div class="details" th:if="${#strings.isEmpty(error)}">
+	  	<div class="details" th:if="${#strings.isEmpty(error) and #strings.isEmpty(successMessage)}">
 	  		<form onsubmit="thymeleafScript.prepareForm()" method="post"
 	  			  th:object="${form}" 
 	  			  th:action="@{tradesmanRegistration}" action="#"  
 	  			  enctype="multipart/form-data" >
 	  			  
-	  			  <ul th:if="${#fields.hasErrors('*')}">
-  <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
-				</ul>
+	  			<div th:if="${#fields.hasErrors('*')}">	
+  					<div class="alert alert-danger" 
+  						 th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</div>
+				</div>
 	  		
 	  			<input type="hidden" name="leadId" id="leadId" 
 	  				   th:field="*{leadId}"  />
 	  			
-	  			<div id="contact" th:insert="fragments/tradesman-registration :: contact-details" />
+	  			<div id="contact-details" th:insert="fragments/tradesman-registration :: contact-details" />
 	  		
-	  			<div id="company" th:insert="fragments/tradesman-registration :: company-details" />
+	  			<div id="company-details" th:insert="fragments/tradesman-registration :: company-details" />
 	  			
-	  			<div id="area" th:insert="fragments/tradesman-registration :: area-details" />
+	  			<div id="area-details" th:insert="fragments/tradesman-registration :: area-details" />
 	  			
-	  			<div id="feature" th:insert="fragments/tradesman-registration :: feature-details" />
+	  			<div id="feature-details" th:insert="fragments/tradesman-registration :: feature-details" />
 	  		
-	  			<input id="submit" type="submit" />
-	  		
+		  		 <div class="row flow-buttons">
+			        <div class="col-xs-4">
+			            <button id="prev" class="btn btn-warning" type="button">Prev</button>
+			        </div>
+			        <div class="col-xs-4 text-center">
+			            <input id="submit" class="btn btn-primary submit-btn" type="submit" />
+			        </div>
+			        <div class="col-xs-4 text-end">
+			            <button id="next" class="btn btn-success" type="button">Next</button>
+			        </div>
+			    </div>
 	  		</form>
 	  	</div>
-  	
   	</div>
+	  	
+	<div id="footer" th:insert="fragments/footer :: footer" />
   	
   	<script th:src="@{resources/js/jquery.js}"></script>
   	<script th:src="@{resources/js/bootstrap.js}"></script>
+  	<script th:src="@{resources/js/fileinput.js}"></script>
   	<script th:src="@{resources/js/utils.js}"></script>
   	<script th:src="@{resources/js/intlTelInput.js}"></script>
   	<script th:src="@{resources/js/tradesmanRegistration.js}"></script>
@@ -120,7 +123,11 @@
 			allowDropdown: false,
 			autoPlaceholder: "aggressive"
 		});
-	    
+	    $('.intl-tel-input').css('display', 'block');
+
+	    /* IMAGE UPLOAD */
+	   $('#logo').fileinput();
+	   $('#featureImage').fileinput();
     /*]]>*/
 	</script> 
   	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBqA5tZjB_QeP7ONTgDQURWcafuavNVzNE&callback=thymeleafScript.initMap"></script>

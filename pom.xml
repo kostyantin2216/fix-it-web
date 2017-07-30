@@ -8,7 +8,7 @@
   	<description>One of the view layers for fix-it.</description>
   
   	<properties>
-  		<components.version>0.0.1-SNAPSHOT</components.version>
+  		<components.version>0.0.1</components.version>
 		<spring.version>4.3.4.RELEASE</spring.version>
 		<servlet.version>2.5</servlet.version>
 		<thymeleaf.spring.version>3.0.3.RELEASE</thymeleaf.spring.version>

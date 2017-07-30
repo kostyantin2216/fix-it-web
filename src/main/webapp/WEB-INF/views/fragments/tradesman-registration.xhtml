@@ -66,22 +66,24 @@
   		<h3 th:text="#{area.details}">Area Details</h3>
   		
 	  	<p class="bg-danger" th:if="${#fields.hasErrors('workingAreas')}" th:errors="*{workingAreas}">Must pick area's you are willing to accept work in.</span>
-  		<div id="map" ></div>  	
+  		<div id="areaCount" class="alert"></div>
+  		<div id="map" class="map" ></div>  	
   		
   		<input type="hidden" name="workingAreas" id="workingAreas"
   			   th:field="*{workingAreas}" th:errorClass="has-error" />	
   	</div>
   	
   	<div th:fragment="feature-details" >
-  	 	
-  	 	<h3 th:text="#{feature.details}">Feature Details</h3>
-  	 	
-  	 	<div class="form-group">
-    		<label for="logo" th:text="#{upload.logo}">Upload Logo</label>
-    		<input type="file" id="logo" name="logo">
-    		<p class="error" th:if="${#fields.hasErrors('logo')}" th:errors="${logo}">Logo Error</p>
+
+		<h3 th:text="#{feature.details}">Feature Details</h3>
+
+		<div class="form-group">
+			<label for="logo" th:text="#{upload.logo}">Upload Logo</label> 
+			<input type="file" id="logo" name="logo">
+			<p class="error" th:if="${#fields.hasErrors('logo')}" th:errors="${logo}">Logo Error</p>
 		</div>
-	 	<div class="form-group">
+		
+		<div class="form-group">
     		<label for="featureImage" th:text="#{upload.feature.image}">Upload Feature Image</label>
     		<input type="file" id="featureImage" name="feature">
 		</div>

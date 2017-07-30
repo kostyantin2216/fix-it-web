@@ -110,7 +110,9 @@ function ThymeleafScript(baseApiUrl, authorizationToken, initialMapAreaType, are
 	var mapWrapper = null;
 	var mapControl = null;
 	var mapSelections = null;
+	var mapSelectionsCount = null;
 	var apiAccess = new ApiAccess(baseApiUrl, authorizationToken);
+	var steps = new RegistrationSteps();
 
 
 	// Functions
@@ -118,10 +120,12 @@ function ThymeleafScript(baseApiUrl, authorizationToken, initialMapAreaType, are
 
 	this.initMap = function() {
 		mapSelections = new MapSelections();
+		mapSelectionsCount = new MapSelectionsCount();
 
 		var johannesburg = { lat: -26.171, lng: 28.110 };
 		mapWrapper = new MapWrapper(document.getElementById('map'),  johannesburg);
 		mapWrapper.registerSelectionListener(mapSelections);
+		mapWrapper.registerSelectionListener(mapSelectionsCount);
 
 		mapControl = new MapControl(mapWrapper, johannesburg);
 
@@ -142,6 +146,52 @@ function ThymeleafScript(baseApiUrl, authorizationToken, initialMapAreaType, are
 
 	// Classes
 	// =======================================
+	
+	function RegistrationSteps() {
+		const STEPS = ['contact-details', 'company-details', 'area-details', 'feature-details'];		
+		
+		var currentStep;
+		
+		setStep(0);
+		
+		$('#next').click(onNext);
+		$('#prev').click(onPrev);
+		
+		function setStep(step) {
+			currentStep = step;
+			
+			if(step >= 0 && step < STEPS.length) {
+				for(var i = 0; i < STEPS.length; i++) {
+					$("#" + STEPS[i]).css('display', (i == step ? 'block' : 'none'));
+				}
+			}
+			
+			if(step == 0) {
+				$("#next").css("display", "inline-block");
+				$("#prev").css("display", "none");
+			} else if(step == (STEPS.length - 1)) {
+				$("#next").css("display", "none");
+				$("#prev").css("display", "inline-block");
+			} else {
+				$("#next").css("display", "inline-block");
+				$("#prev").css("display", "inline-block");
+			}
+		}
+		
+		function onNext() {
+			var newStep = currentStep + 1;
+			if(newStep < STEPS.length) {
+				setStep(newStep);
+			}
+		}
+		
+		function onPrev() {
+			var newStep = currentStep - 1;
+			if(newStep >= 0) {
+				setStep(newStep);
+			}
+		}
+	}
 
 	function MapSelections() {
 		var selectedAreas = [];
@@ -177,7 +227,42 @@ function ThymeleafScript(baseApiUrl, authorizationToken, initialMapAreaType, are
 	}
 
 
+	
 
+	function MapSelectionsCount() {
+		var countDiv = $('#areaCount');
+		var count = 0;
+		update();
+		
+		function update() {
+			if(count == 0) {
+				countDiv.text("You haven't selected any areas");
+				countDiv.removeClass('alert-success');
+				countDiv.addClass('alert-warning');
+			} else {
+				countDiv.text("You have selected " + count + " areas");
+				countDiv.removeClass('alert-warning');
+				countDiv.addClass('alert-success');
+			}
+		}
+		
+		return {
+			onAreaSelected: function(areaId) {
+				count++;
+				update();
+			},
+			onAreaUnselected: function(areaId) {
+				count--;
+				update();
+			},
+			onAreasCleared: function() {
+				count = 0;
+				update();
+			}
+		};
+	}
+
+	
 
 	function MapWrapper(mapElem, center) {
 		const DEFAULT_ZOOM = 8;
@@ -328,13 +413,15 @@ function ThymeleafScript(baseApiUrl, authorizationToken, initialMapAreaType, are
 			});
 		}
 	}
-
-
+	
+	
+	
 
 
 	function MapControl(mapWrapper, center) {
 		var controlDiv = document.createElement('div');
 		controlDiv.id = 'map-control'; 
+		controlDiv.className = 'map-control'; 
 
 		controlDiv.appendChild(createBackControl());
 		controlDiv.appendChild(createClearSelectionsControl());

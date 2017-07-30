@@ -1,0 +1,340 @@
+@charset "UTF-8";
+/* SOCIAL START */
+
+.social {
+    display: block;
+    text-align: right;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.social i {
+    color: #fff;
+    line-height: 30px;
+}
+
+.social li {
+    font-size: 18px;
+    -webkit-box-shadow: 0 2px 2px 0 rgba(0,0,0,0.6);
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,0.6);
+    display: inline-block;
+    height: 35px;
+    margin-right: 5px;
+    width: 35px;
+    text-align: center;
+    -webkit-transition: background .5s ease-in-out;
+    -moz-transition: background .5s ease-in-out;
+    -o-transition: background .5s ease-in-out;
+    -ms-transition: background .5s ease-in-out;
+    transition: background .5s ease-in-out;
+    border: 2px solid #ffffff;
+    cursor: pointer;
+}
+
+.social li.facebook {
+    background-size: 100% 200%;
+    background-image: linear-gradient(to bottom, transparent 50%, #4C66A4 50%);
+}
+
+.social li.facebook:hover {
+    background-position: 0 -100%;
+    background-color: #4C66A4;
+}
+
+.social li.linkedin {
+    background-size: 100% 200%;
+    background-image: linear-gradient(to bottom, transparent 50%, #069 50%);
+}
+
+.social li.linkedin:hover {
+    background-position: 0 -100%;
+    background-color: #069;
+}
+
+/* SOCIAL END */
+/* CUSTOM START */
+
+.details {
+	margin: 20px;
+}
+
+.flow-buttons {
+	padding-top: 10px;
+}
+
+.form-group .intl-tel-input {
+	display: block;
+}
+
+/* CUSTOM END */
+/* TYPOGRAPHY START */
+
+/*
+   Animation example, for spinners
+*/
+.animate-spin {
+  -moz-animation: spin 2s infinite linear;
+  -o-animation: spin 2s infinite linear;
+  -webkit-animation: spin 2s infinite linear;
+  animation: spin 2s infinite linear;
+  display: inline-block;
+}
+@-moz-keyframes spin {
+  0% {
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  100% {
+    -moz-transform: rotate(359deg);
+    -o-transform: rotate(359deg);
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+@-webkit-keyframes spin {
+  0% {
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  100% {
+    -moz-transform: rotate(359deg);
+    -o-transform: rotate(359deg);
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+@-o-keyframes spin {
+  0% {
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  100% {
+    -moz-transform: rotate(359deg);
+    -o-transform: rotate(359deg);
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+@-ms-keyframes spin {
+  0% {
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  100% {
+    -moz-transform: rotate(359deg);
+    -o-transform: rotate(359deg);
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+@keyframes spin {
+  0% {
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  100% {
+    -moz-transform: rotate(359deg);
+    -o-transform: rotate(359deg);
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+
+
+@font-face {
+  font-family: 'fontello';
+  src: url('../fonts/fontello.woff2?46333570') format('woff2');
+  src: url('../fonts/fontello.woff2?46333570') format('woff2'),
+  	   url('../fonts/fontello.eot?46333570#iefix') format('embedded-opentype'),
+       url('../fonts/fontello.woff?46333570') format('woff'),
+       url('../fonts/fontello.ttf?46333570') format('truetype'),
+       url('../fonts/fontello.svg?46333570#fontello') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+/* Chrome hack: SVG is rendered more smooth in Windozze. 100% magic, uncomment if you need it. */
+/* Note, that will break hinting! In other OS-es font will be not as sharp as it could be */
+/*
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  @font-face {
+    font-family: 'fontello';
+    src: url('../font/fontello.svg?46333570#fontello') format('svg');
+  }
+}
+*/
+ 
+ [class^="icon-"]:before, [class*=" icon-"]:before {
+  font-family: "fontello";
+  font-style: normal;
+  font-weight: normal;
+  speak: none;
+ 
+  display: inline-block;
+  text-decoration: inherit;
+  width: 1em;
+  margin-right: .2em;
+  text-align: center;
+  /* opacity: .8; */
+ 
+  /* For safety - reset parent styles, that can break glyph codes*/
+  font-variant: normal;
+  text-transform: none;
+ 
+  /* fix buttons height, for twitter bootstrap */
+  line-height: 1em;
+ 
+  /* Animation center compensation - margins should be symmetric */
+  /* remove if not needed */
+  margin-left: .2em;
+ 
+  /* you can be more comfortable with increased icons size */
+  /* font-size: 120%; */
+ 
+  /* Font smoothing. That was taken from TWBS */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+ 
+  /* Uncomment for 3D effect */
+  /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
+}
+ 
+.icon-phone:before { content: '\e801'; } /* '' */
+.icon-facebook:before { content: '\f09a'; } /* '' */
+.icon-mail-alt:before { content: '\f0e0'; } /* '' */
+.icon-whatsapp:before { content: '\f232'; } /* '' */
+
+.text-end {
+	text-align: end;
+}
+
+/* TYPOGRAPHY END */
+/* BOOTSTRAP OVERRIDES START */
+
+.panel-default {
+	margin: 30px 20px;
+}
+
+.container {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+.row {
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+/* BOOTSTRAP OVERRIDES END */
+/* HEADER START */
+
+.logo {
+    text-align: left;
+    padding-bottom: 0px;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.logo a {
+    font-weight: 600;
+    font-family: 'Open Sans', sans-serif;
+    margin-bottom: 10px;
+    font-size: 40px;
+    color: #fff;
+}
+
+.header_section {
+    color: #fff;
+}
+
+.hd_cover {
+    color: #fff;
+    background-size: cover;
+    background-color: #31A3DD;
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
+
+.head-contact-info {
+    display: block;
+    text-align: right;
+    padding-top: 5px;
+    padding-bottom: 2px;
+    padding-left: 0;
+}
+
+.head-contact-info li {
+    display: inline;
+    margin-right: 10px;
+    font-size: 18px;
+}
+
+.head-contact-info li a {
+    color: #fff;
+}
+
+/* HEADER END */
+/* FOOTER START */
+
+.enigma_footer_area {
+    background: #31A3DD;
+    border-top: 0px solid #6B6B6B;
+    padding: 10px 0 0px;
+    text-align: center;
+}
+
+.enigma_footer_area p {
+    font-family: 'Open Sans', sans-serif;
+    line-height: 20px;
+    font-size: 15px;
+    color: #f2f2f2;
+    bottom: 0;
+    text-align: center;
+    padding-top: 12px;
+}
+
+/* FOOTER END */
+/* RESPONSIVE START */
+
+@media (max-width: 768px) {
+	.logo img {
+	    display: inline-block;
+	}
+}
+
+@media only screen and (max-width: 767px) {
+	.logo {
+	    text-align: center;
+	    padding-top: 15px;
+	    padding-bottom: 0px;
+	}
+	.head-contact-info {
+	    display: block;
+	    text-align: center;
+	    padding-top: 5px;
+	    padding-bottom: 2px;
+	    padding-left: 0;
+	}
+	.social {
+	    display: block;
+	    text-align: center;
+	    padding-top: 5px;
+	    padding-bottom: 5px;
+    	padding-left: 0px;
+	}
+}
+
+/* RESPONSIVE END */
