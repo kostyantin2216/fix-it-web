@@ -2,13 +2,13 @@
 	<modelVersion>4.0.0</modelVersion>
   	<groupId>com.fix-it</groupId>
   	<artifactId>fit-it-web</artifactId>
-  	<version>0.0.1-SNAPSHOT</version>
+  	<version>0.0.2</version>
   	<packaging>war</packaging>
   	<name>Fix It Web</name>
   	<description>One of the view layers for fix-it.</description>
   
   	<properties>
-  		<components.version>0.0.1</components.version>
+  		<components.version>0.0.2</components.version>
 		<spring.version>4.3.4.RELEASE</spring.version>
 		<servlet.version>2.5</servlet.version>
 		<thymeleaf.spring.version>3.0.3.RELEASE</thymeleaf.spring.version>

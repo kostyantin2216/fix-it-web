@@ -5,6 +5,8 @@ package com.fixit.web.controllers;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -24,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.fixit.components.registration.tradesmen.TradesmanRegistrant;
+import com.fixit.components.registration.TradesmanRegistrationController;
 import com.fixit.core.dao.sql.ProfessionDao;
 import com.fixit.core.dao.sql.RestClientDao;
 import com.fixit.core.dao.sql.StoredPropertyDao;
@@ -32,11 +34,14 @@ import com.fixit.core.data.MapAreaType;
 import com.fixit.core.data.mongo.Tradesman;
 import com.fixit.core.data.sql.TradesmanLead;
 import com.fixit.core.general.PropertyGroup.Group;
+import com.fixit.core.general.StoredProperties;
 import com.fixit.core.logging.FILog;
 import com.fixit.core.utils.Constants;
 import com.fixit.web.config.MessagesProperties;
 import com.fixit.web.forms.TradesmanRegistrationForm;
+import com.fixit.web.forms.FormFieldSchedule.WorkingDayView;
 import com.fixit.web.tlutils.ThymeleafUtilities;
+import com.google.gson.reflect.TypeToken;
 
 /**
  * @author 		Kostyantin
@@ -52,7 +57,7 @@ public class TradesmanRegistrationViewController {
 	private final MessagesProperties msgs;
 	private final ThymeleafUtilities thymeleafUtils;
 	
-	private final TradesmanRegistrant tradesmanRegistrant;
+	private final TradesmanRegistrationController tradesmanRegistrant;
 	private final ProfessionDao professionDao;
 	private final StoredPropertyDao storedPropertyDao;
 		
@@ -61,7 +66,7 @@ public class TradesmanRegistrationViewController {
 	private HttpServletRequest httpServletRequest;
 	
 	@Autowired
-	public TradesmanRegistrationViewController(MessagesProperties messageSource, ThymeleafUtilities thymeleafUtilities, TradesmanRegistrant tradesmanRegistrant, RestClientDao restClientDao, ProfessionDao professionDao, StoredPropertyDao storedPropertyDao, HttpServletRequest httpServletRequest) {
+	public TradesmanRegistrationViewController(MessagesProperties messageSource, ThymeleafUtilities thymeleafUtilities, TradesmanRegistrationController tradesmanRegistrant, RestClientDao restClientDao, ProfessionDao professionDao, StoredPropertyDao storedPropertyDao, HttpServletRequest httpServletRequest) {
 		this.msgs = messageSource;
 		this.thymeleafUtils = thymeleafUtilities;
 		
@@ -108,21 +113,16 @@ public class TradesmanRegistrationViewController {
 		if(!hasErrors) {
 			boolean validLogo = form.isValidLogo();
 			boolean validFeature = form.isValidFeature();
-			if(validLogo && validFeature) {
+			boolean validSchedule = form.isValidSchedule();
+			if(validLogo && validFeature && validSchedule) {
 				Tradesman tradesman = form.toTradesman();
 				
 				MultipartFile logo = form.getLogo();
 				String logoExtension = "." + FilenameUtils.getExtension(logo.getOriginalFilename());
 				
-				MultipartFile feature = form.getFeature();
-				String featureExtension = "." + FilenameUtils.getExtension(feature.getOriginalFilename());
-				
-				try(InputStream logoInputStream = logo.getInputStream(); 
-					InputStream featureInputStream = feature.getInputStream()
-				) {
+				try(InputStream logoInputStream = logo.getInputStream()) {
 					tradesmanRegistrant.registerTradesman(form.getLeadId(), tradesman,
-							logoInputStream, logoExtension,
-							featureInputStream, featureExtension
+							logoInputStream, logoExtension
 					);
 				} catch (IOException e) {
 					FILog.e(Constants.LT_TRADESMAN_REGISTRATION, "Error while registering tradesman " + tradesman.toString(), e, true);
@@ -141,6 +141,9 @@ public class TradesmanRegistrationViewController {
 				}
 				if(!validFeature) {
 					bindingResult.addError(new FieldError(Constants.ARG_FORM, "featureImage", msgs.getMsg(MessagesProperties.FEATURE_IMAGE_EMPTY)));
+				}
+				if(!validSchedule) {
+					bindingResult.addError(new FieldError(Constants.ARG_FORM, "schedule", msgs.getMsg(MessagesProperties.SCHEDULE_INVALID)));
 				}
 				hasErrors = true;
 			}
@@ -163,39 +166,9 @@ public class TradesmanRegistrationViewController {
 		mv.addObject(Constants.ARG_AUTHORIZATION_TOKEN, restClientToken);
 		mv.addObject(Constants.ARG_INITIAL_MAP_AREA_TYPE, MapAreaType.Province.name());
 		mv.addObject(Constants.ARG_PROFESSIONS, professionDao.getActiveProfessions());
+		Type listType = new TypeToken<ArrayList<String>>(){}.getType();
+		mv.addObject(Constants.ARG_FEATURE_IMAGES, storedPropertyDao.getPropertyGroup(Group.web).getJsonProperty(StoredProperties.WEB_FEATURE_IMAGE, listType));
 		mv.addObject("calUtils", thymeleafUtils.getCalendarUtils());
 	}
-	
-	/*public String editTradesmanFeatures(@RequestParam("logo") MultipartFile logo,
-										@RequestParam("feature") MultipartFile feature,
-										ModelAndView mv,
-										BindingResult bindingResult) {
-	//	mv.setViewName("redirect:" + END_POINT + "?leadId=" + leadId);
-		if(!logo.isEmpty()) {
-			InputStream logoInputStream= null;
-			try {				
-				logoInputStream = logo.getInputStream();
-				String fileExtension = "." + FilenameUtils.getExtension(logo.getOriginalFilename());
-				fileManager.storeTradesmanLogo("21edre432f", fileExtension, logoInputStream);
-				throw new IllegalStateException();
-			
-			} catch (IllegalStateException | IOException e) {
-				bindingResult.addError(new ObjectError("logo", "invalid logo"));
-				//mv.addObject(Constants.ARG_ERROR, Throwables.getStackTraceAsString(e));
-			} finally {
-				if(logoInputStream != null) {
-					try {
-						logoInputStream.close();
-					} catch (IOException e) {
-						FILog.e("registration error", e);
-					}
-				}
-			}
-		}
-		//
-		mv.addObject(bindingResult);
-		mv.setViewName(Constants.VIEW_TRADESMAN_REGISTRATION);
-		return null;
-	}*/
 	
 }

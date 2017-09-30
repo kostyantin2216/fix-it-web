@@ -2,8 +2,6 @@ package com.fixit.web.forms;
 
 import java.util.List;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.bson.types.ObjectId;
@@ -14,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fixit.core.data.mongo.Tradesman;
 import com.fixit.core.general.PropertyGroup;
 import com.fixit.web.forms.validation.Telephone;
+import com.google.common.primitives.Ints;
 
 /**
  * @author 		Kostyantin
@@ -41,13 +40,13 @@ public class TradesmanRegistrationForm {
 	@NotEmpty(message = "{validation.company.name.empty}")
 	private String companyName;
 	
-	@NotNull(message = "{validation.profession.empty}")
-	@Min(value = 1, message = "{validation.profession.empty}")
-	private Integer profession;
+	@Size(min = 1, message = "{validation.profession.empty}")
+	private List<Integer> professions;
 	
 	private MultipartFile logo;
 	
-	private MultipartFile feature;
+	@NotEmpty(message = "{validation.feature.image.empty}")
+	private String featureImage;
 	
 	public TradesmanRegistrationForm() { }
 	
@@ -61,7 +60,11 @@ public class TradesmanRegistrationForm {
 	}
 	
 	public boolean isValidFeature() {
-		return feature != null && !feature.isEmpty();
+		return featureImage != null && !featureImage.isEmpty();
+	}
+	
+	public boolean isValidSchedule() {
+		return schedule.isValid();
 	}
 	
 	public Long getLeadId() {
@@ -120,12 +123,12 @@ public class TradesmanRegistrationForm {
 		this.companyName = companyName;
 	}
 	
-	public Integer getProfession() {
-		return profession;
+	public List<Integer> getProfessions() {
+		return professions;
 	}
 	
-	public void setProfession(Integer profession) {
-		this.profession = profession;
+	public void setProfessions(List<Integer> professions) {
+		this.professions = professions;
 	}
 	
 	public MultipartFile getLogo() {
@@ -136,22 +139,25 @@ public class TradesmanRegistrationForm {
 		this.logo = logo;
 	}
 
-	public MultipartFile getFeature() {
-		return feature;
+	public String getFeatureImage() {
+		return featureImage;
 	}
 
-	public void setFeature(MultipartFile feature) {
-		this.feature = feature;
+	public void setFeatureImage(String featureImage) {
+		this.featureImage = featureImage;
 	}
 
 	public Tradesman toTradesman() {
 		Tradesman tradesman = new Tradesman();
+		tradesman.setLeadId(leadId);
 		tradesman.setCompanyName(companyName);
 		tradesman.setContactName(contactName);
 		tradesman.setEmail(email);
-		tradesman.setProfessionId(profession);
+		tradesman.setProfessions(Ints.toArray(professions));
 		tradesman.setTelephone(telephone);
 		tradesman.setRating(0.0f);
+		tradesman.setWorkingDays(schedule.toWorkingDays());
+		tradesman.setFeatureImageUrl(featureImage);
 		
 		ObjectId[] workingAreasIds = new ObjectId[workingAreas.size()];
 		for(int i = 0; i < workingAreasIds.length; i++) {
@@ -166,8 +172,8 @@ public class TradesmanRegistrationForm {
 	public String toString() {
 		return "TradesmanRegistrationForm [leadId=" + leadId + ", contactName=" + contactName + ", email=" + email
 				+ ", telephone=" + telephone + ", workingAreas=" + workingAreas + ", schedule=" + schedule
-				+ ", companyName=" + companyName + ", profession=" + profession + ", logo=" + logo + ", feature="
-				+ feature + "]";
+				+ ", companyName=" + companyName + ", professions=" + professions + ", logo=" + logo + ", feature="
+				+ featureImage + "]";
 	}
 
 }

@@ -102,7 +102,7 @@ if (!Array.prototype.forEach) {
 //==========================
 
 
-function ThymeleafScript(baseApiUrl, authorizationToken, initialMapAreaType, areas) {
+function ThymeleafScript(baseApiUrl, authorizationToken, initialMapAreaType) {
 
 	// Script Global Variable
 	// ======================================
@@ -112,22 +112,43 @@ function ThymeleafScript(baseApiUrl, authorizationToken, initialMapAreaType, are
 	var mapSelections = null;
 	var mapSelectionsCount = null;
 	var apiAccess = new ApiAccess(baseApiUrl, authorizationToken);
-	var steps = new RegistrationSteps();
+	var steps = new RegistrationSteps([
+		new Step('contact-details', [
+			/*new Validator('contactName', function(value) {
+				return value.length > 0;
+			}),
+			new Validator('email', function(value) {
+				return validateEmail(value);
+			}),
+			new Validator('telephone', function(value) {
+				return telephone.intlTelInput("isValidNumber");
+			})*/
+		]),
+		new Step('company-details', [
+			/*new Validator('companyName', function(value) {
+				return value.length > 0;
+			})*/
+		]),
+		new Step('area-details', [], function() {mapWrapper.fitCenter;}),
+		new Step('feature-details', [])
+	]);
 
 
 	// Functions
 	// ======================================
 
+	// public functions
+	
 	this.initMap = function() {
-		mapSelections = new MapSelections();
-		mapSelectionsCount = new MapSelectionsCount();
+		mapSelections = new MapSelections($("#workingAreas").val());
+		mapSelectionsCount = new MapSelectionsCount($('#areaCount'), mapSelections.count());
 
 		var johannesburg = { lat: -26.171, lng: 28.110 };
 		mapWrapper = new MapWrapper(document.getElementById('map'),  johannesburg);
 		mapWrapper.registerSelectionListener(mapSelections);
 		mapWrapper.registerSelectionListener(mapSelectionsCount);
 
-		mapControl = new MapControl(mapWrapper, johannesburg);
+		mapControl = new MapControl(mapWrapper);
 
 		apiAccess.getMapAreas(initialMapAreaType, mapWrapper.showAreas);
 	}
@@ -136,66 +157,110 @@ function ThymeleafScript(baseApiUrl, authorizationToken, initialMapAreaType, are
 		$("#workingAreas").val(mapSelections.toInputValue());
 		
 		var telephoneInput = $("#telephone");
-		//if(telephoneInput.intlTelInput("isValidNumber")) {
-			telephoneInput.val(telephoneInput.intlTelInput("getNumber"));
-		/*} else {
-			
-		}*/
+		telephoneInput.val(telephoneInput.intlTelInput("getNumber"));
 	}
 
+	// private functions
+	
+	function validateEmail(email) {
+	  var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+	  return re.test(email);
+	}
 
 	// Classes
 	// =======================================
 	
-	function RegistrationSteps() {
-		const STEPS = ['contact-details', 'company-details', 'area-details', 'feature-details'];		
+	function Step(elementId, validators, selectionCallback) {
+		this.elementId = elementId;
+		this.validators = validators;
+		this.selectionCallback = selectionCallback;
 		
-		var currentStep;
+		this.validate = function() {
+			var valid = true;
+			for(var i = 0; i < this.validators.length; i++){
+				if(!this.validators[i].validate()) {
+					valid = false;
+				}
+			}
+			return valid;
+		};
+	}
+	
+	function Validator(inputElementId, inputValidator) {
+		this.inputElementId = inputElementId;
+		this.inputValidator = inputValidator;
+		
+		this.validate = function() {
+			var inputElement = $('#' + this.inputElementId);
+			if(inputValidator(inputElement.val())) {
+				inputElement.removeClass('has-error');
+				return true;
+			} else {
+				inputElement.addClass('has-error');
+				return false;
+			}
+		};
+	}
+	
+	function RegistrationSteps(steps) {	
+		var steps = steps;
+		var currentStepIndex;
 		
 		setStep(0);
 		
 		$('#next').click(onNext);
 		$('#prev').click(onPrev);
+		$('#submit').css("display", "none");
 		
-		function setStep(step) {
-			currentStep = step;
+		function setStep(stepIndex, validate) {
+			var step = steps[stepIndex];
+			if(step && (validate ? step.validate() : true)) {
+				currentStepIndex = stepIndex;
+				
+				for(var i = 0; i < steps.length; i++) {
+					$("#" + steps[i].elementId).css('display', (i == stepIndex ? 'block' : 'none'));
+				}			
 			
-			if(step >= 0 && step < STEPS.length) {
-				for(var i = 0; i < STEPS.length; i++) {
-					$("#" + STEPS[i]).css('display', (i == step ? 'block' : 'none'));
+				if(stepIndex == 0) {
+					$("#next").css("display", "inline-block");
+					$("#prev").css("display", "none");
+				} else if(stepIndex == (steps.length - 1)) {
+					$("#next").css("display", "none");
+					$("#prev").css("display", "inline-block");
+					$('#submit').css("display", "inline-block");
+				} else {
+					$("#next").css("display", "inline-block");
+					$("#prev").css("display", "inline-block");
 				}
-			}
-			
-			if(step == 0) {
-				$("#next").css("display", "inline-block");
-				$("#prev").css("display", "none");
-			} else if(step == (STEPS.length - 1)) {
-				$("#next").css("display", "none");
-				$("#prev").css("display", "inline-block");
-			} else {
-				$("#next").css("display", "inline-block");
-				$("#prev").css("display", "inline-block");
+
+				if(step.selectionCallback) {
+					step.selectionCallback();
+				}
 			}
 		}
 		
 		function onNext() {
-			var newStep = currentStep + 1;
-			if(newStep < STEPS.length) {
-				setStep(newStep);
+			var newStep = currentStepIndex + 1;
+			if(newStep < steps.length) {
+				setStep(newStep, true);
 			}
 		}
 		
 		function onPrev() {
-			var newStep = currentStep - 1;
+			var newStep = currentStepIndex - 1;
 			if(newStep >= 0) {
-				setStep(newStep);
+				setStep(newStep, true);
 			}
 		}
 	}
 
-	function MapSelections() {
+	function MapSelections(inputValue) {
 		var selectedAreas = [];
 
+		if(inputValue) {
+			selectedAreas = inputValue.split(',');
+		}
+		
 		return {
 			get: function() { selectedAreas },
 			contains: function(areaId) {
@@ -222,6 +287,9 @@ function ThymeleafScript(baseApiUrl, authorizationToken, initialMapAreaType, are
 					result += areaId;
 				}
 				return result;
+			},
+			count: function() {
+				return selectedAreas.length;
 			}
 		};
 	}
@@ -229,9 +297,7 @@ function ThymeleafScript(baseApiUrl, authorizationToken, initialMapAreaType, are
 
 	
 
-	function MapSelectionsCount() {
-		var countDiv = $('#areaCount');
-		var count = 0;
+	function MapSelectionsCount(countDiv, count) {
 		update();
 		
 		function update() {
@@ -418,7 +484,7 @@ function ThymeleafScript(baseApiUrl, authorizationToken, initialMapAreaType, are
 	
 
 
-	function MapControl(mapWrapper, center) {
+	function MapControl(mapWrapper) {
 		var controlDiv = document.createElement('div');
 		controlDiv.id = 'map-control'; 
 		controlDiv.className = 'map-control'; 

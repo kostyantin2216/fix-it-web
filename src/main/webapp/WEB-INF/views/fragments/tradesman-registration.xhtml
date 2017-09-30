@@ -38,15 +38,16 @@
 		    <input type="text" class="form-control" name="companyName" id="companyName" 
 		    	   th:placeholder="#{company.name}" th:field="*{companyName}" />
 	  	</div>
-	  	<div class="form-group" th:classappend="${#fields.hasErrors('profession')}? has-error">
-      		<label for="profession" th:text="#{profession}">Profession</label>
-	  		<span class="help-block" th:if="${#fields.hasErrors('profession')}" th:errors="*{profession}">Incorrect Profession.</span>
-      		<select id="profession" name="profession" class="form-control"
-      				th:field="*{profession}">
-      			<option th:each="profession : ${professions}" th:value="${profession.id}" 
-      					th:text="${profession.name}">Plumber</option>
-      		</select>
+	  	
+	  	<div class="form-group" th:classappend="${#fields.hasErrors('professions')}? has-error">
+      		<h4 th:text="#{choose.profession}">Pick your Professions:</h4>
+	  		<span class="help-block" th:if="${#fields.hasErrors('professions')}" th:errors="*{professions}">Incorrect Profession.</span>
+      		<div th:each="profession : ${professions}">
+				<input type="checkbox" th:id="|profession${profession.id}|" th:value="${profession.id}" th:field="*{professions}" />
+				<label th:for="|profession${profession.id}|" th:text="${profession.name}">Plumber</label>
+			</div>
     	</div>
+    	
     	<div class="form-group" th:classappend="${#fields.hasErrors('schedule')}? has-error">
       		<label th:text="#{work.schedule}">Work Schedule</label>
 	  		<span class="help-block" th:if="${#fields.hasErrors('schedule')}" th:errors="*{schedule}">Must fill out your work schedule.</span>
@@ -79,13 +80,16 @@
 
 		<div class="form-group">
 			<label for="logo" th:text="#{upload.logo}">Upload Logo</label> 
-			<input type="file" id="logo" name="logo">
+			<input type="file" id="logo" name="logo" th:field="*{logo}">
 			<p class="error" th:if="${#fields.hasErrors('logo')}" th:errors="${logo}">Logo Error</p>
 		</div>
 		
-		<div class="form-group">
-    		<label for="featureImage" th:text="#{upload.feature.image}">Upload Feature Image</label>
-    		<input type="file" id="featureImage" name="feature">
+		<div class="form-group feature-images">
+			<label for="featureImage" th:text="#{upload.feature.image}">Upload Feature Image</label>
+    		<span class="help-block" th:if="${#fields.hasErrors('featureImage')}" th:errors="*{featureImage}">Must Select a Feature Image.</span>
+    		<select id="featureImage" th:field="*{featureImage}">
+              <option th:each="featureImage : ${featureImages}" th:value="${featureImage}" th:attr="data-img-src=${featureImage}" ></option>
+            </select>
 		</div>
   	</div>
   	

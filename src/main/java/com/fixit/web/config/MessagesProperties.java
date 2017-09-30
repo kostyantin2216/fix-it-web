@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class MessagesProperties {
 	
-	public final static String ALREADY_REGISTERED = "aready.registered";
+	public final static String ALREADY_REGISTERED = "already.registered";
 	
 	public static final String ERROR_UNEXPECTED = "error.unexpected";
 
@@ -24,6 +24,7 @@ public class MessagesProperties {
 	
 	public final static String LOGO_EMPTY = "validation.logo.empty";
 	public final static String FEATURE_IMAGE_EMPTY = "validation.feature.image.empty";
+	public final static String SCHEDULE_INVALID = "validation.schedule.invalid";
 	
 	public final static String TRADESMAN_REGISTRATION_SUCCESS = "tradesman.registration.success";
 	
