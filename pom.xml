@@ -9,7 +9,7 @@
   
   	<properties>
   		<components.version>0.0.2</components.version>
-		<spring.version>4.3.4.RELEASE</spring.version>
+		<spring.version>4.3.9.RELEASE</spring.version>
 		<servlet.version>2.5</servlet.version>
 		<thymeleaf.spring.version>3.0.3.RELEASE</thymeleaf.spring.version>
 		<hibernate.version>5.2.5.Final</hibernate.version>

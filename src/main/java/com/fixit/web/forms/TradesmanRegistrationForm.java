@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.validation.constraints.Size;
 
-import org.bson.types.ObjectId;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.web.multipart.MultipartFile;
@@ -158,12 +157,7 @@ public class TradesmanRegistrationForm {
 		tradesman.setRating(0.0f);
 		tradesman.setWorkingDays(schedule.toWorkingDays());
 		tradesman.setFeatureImageUrl(featureImage);
-		
-		ObjectId[] workingAreasIds = new ObjectId[workingAreas.size()];
-		for(int i = 0; i < workingAreasIds.length; i++) {
-			workingAreasIds[i] = new ObjectId(workingAreas.get(i));
-		}
-		tradesman.setWorkingAreas(workingAreasIds);
+		tradesman.setWorkingAreas(workingAreas.toArray(new String[workingAreas.size()]));
 		
 		return tradesman;
 	}

@@ -39,7 +39,6 @@ import com.fixit.core.logging.FILog;
 import com.fixit.core.utils.Constants;
 import com.fixit.web.config.MessagesProperties;
 import com.fixit.web.forms.TradesmanRegistrationForm;
-import com.fixit.web.forms.FormFieldSchedule.WorkingDayView;
 import com.fixit.web.tlutils.ThymeleafUtilities;
 import com.google.gson.reflect.TypeToken;
 
